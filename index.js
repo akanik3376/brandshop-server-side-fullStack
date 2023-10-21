@@ -11,9 +11,7 @@ const port = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
 
-// technology-data-server EdEWmDcDAaP1tb7H
 
-console.log(process.env.DB_NAME)
 
 const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.vfr78tp.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -30,7 +28,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
         const carCollection = client.db('carDB').collection('car')
         const carCartCollection = client.db('carDB').collection('cart')
@@ -100,7 +98,7 @@ async function run() {
             res.send(result)
         })
 
-        // http://localhost:5000/addToCard
+
 
         app.get("/getCart/:userEmail", async (req, res) => {
             try {
