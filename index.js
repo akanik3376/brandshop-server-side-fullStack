@@ -33,6 +33,7 @@ async function run() {
         await client.connect();
 
         const carCollection = client.db('carDB').collection('car')
+        const carCartCollection = client.db('carDB').collection('cart')
 
         app.get('/newCar', async (req, res) => {
             const cursor = carCollection.find();
@@ -77,8 +78,41 @@ async function run() {
             res.send(result);
         });
 
+        // add cart post
+
+        app.delete("/getCart/:id", async (req, res) => {
+            const id = req.params.id;
+
+            const query = { _id: new ObjectId(id) }
+            const result = await carCartCollection.deleteOne(query)
+            console.log(result)
+            res.send(result);
+        });
 
 
+        app.post('/addToCard', async (req, res) => {
+            const addToCard = req.body;
+            console.log(addToCard)
+
+
+            const result = await carCartCollection.insertOne(addToCard);
+            console.log(result)
+            res.send(result)
+        })
+
+        // http://localhost:5000/addToCard
+
+        app.get("/getCart/:userEmail", async (req, res) => {
+            try {
+                const id = req.params.userEmail;
+                console.log(id)
+                const result = await carCartCollection.find({ userEmail: id }).toArray();
+                res.send(result);
+            } catch (error) {
+                console.error("Error:", error);
+                res.status(500).send("Internal Server Error");
+            }
+        });
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
